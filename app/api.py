@@ -1,25 +1,15 @@
 import base64
 import logging
-
-import numpy as np
-import torch
 from fastapi import FastAPI
 from pydantic import BaseModel
-from speechbrain.pretrained import EncoderASR
 
 from config import LogConfig
+from models import transcribe
 
 app = FastAPI()
 
 logging.config.dictConfig(LogConfig().dict())
 logger = logging.getLogger("voice-transcript")
-
-# Initialize Speeech Recognition model
-asr_model = EncoderASR.from_hparams(
-    source="speechbrain/asr-wav2vec2-commonvoice-fr",
-    savedir="pretrained_models/asr-wav2vec2-commonvoice-fr",
-)
-
 
 # Some basic datastructures
 
@@ -51,18 +41,7 @@ def process_transcription(audio: str, sr: int, encoding: str) -> str:
     response = ""
     bytes_arr = base64.b64decode(audio)
     try:
-        signal = torch.tensor(np.frombuffer(bytes_arr, dtype=np.float32))
-        signal_norm = asr_model.audio_normalizer(signal, sr)
-        batch = signal_norm.unsqueeze(0)
-        rel_length = torch.tensor([1.0])
-        # response = str(signal.shape)
-        logger.debug(signal_norm)
-        predicted_words, predicted_tokens = asr_model.transcribe_batch(
-            batch, rel_length
-        )
-        response = str(predicted_words[0])
-        logger.debug(f"Rel_length: {rel_length}")
-        logger.debug(f"Predicted words: {predicted_words}")
+        response = transcribe(bytes_arr, sr)
     except ValueError:
         response = ""
         logger.debug("Corrupt audio input.")
