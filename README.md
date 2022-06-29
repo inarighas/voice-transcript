@@ -11,10 +11,10 @@ Microservice performing audio/voice transcription (speech-to-text).
 
 ## Project structure
 
-- `api/` contains application source code.
+- `app/` contains application source code.
 - `eval/` gathers some evaluation and exploratory scripts.
 - `tests/` is the testing files folder.
-- `samples` contains some audio files for testing.
+- `samples/` contains some audio files for testing.
 
 
 ## Dependencies
