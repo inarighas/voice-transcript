@@ -1,10 +1,10 @@
-import base64
 import logging
 from fastapi import FastAPI
 from pydantic import BaseModel
 
 from config import LogConfig
-from models import transcribe
+from models.speechbrain_model import transcribe
+# from models.voxpopuli_model import transcribe
 
 app = FastAPI()
 
@@ -25,11 +25,13 @@ class FlushedAudio(Instant):
     dtype: str
     sampling_rate: int
     content: str
+    origin: str
 
 
 class Transcription(Instant):
     content: str
     status: str = "unknown"
+    rate: float = 0
 
 
 class FailedTranscription(Transcription):
@@ -37,17 +39,17 @@ class FailedTranscription(Transcription):
     status: str = "error"
 
 
-def process_transcription(audio: str, sr: int, encoding: str) -> str:
+def process_transcription(audio: str, sr: int, encoding: str, origin="buffer"):
     response = ""
-    bytes_arr = base64.b64decode(audio)
     try:
-        response = transcribe(bytes_arr, sr)
+        response, dur = transcribe(audio, sr, origin=origin)
     except ValueError:
         response = ""
         logger.debug("Corrupt audio input.")
+        raise
 
-    logger.info(f"Transcription: {response}")
-    return response
+    logger.debug(f"Transcription: {response}")
+    return response, dur
 
 
 # Test get request
@@ -86,15 +88,19 @@ async def transcript_audio(flushed: FlushedAudio):
 
     # Process by model
     else:
-        text = process_transcription(audio,
-                                     flushed.sampling_rate,
-                                     flushed.encoding)
+        text, dur = process_transcription(audio,
+                                          flushed.sampling_rate,
+                                          flushed.encoding,
+                                          origin=flushed.origin)
+        logger.debug(f"text: {text}")
         # preprocess the image and prepare it for classification
         if text != "":
+            rate = len(text) * 60 / dur       # words/minute
             response = Transcription(
                 user_id=flushed.user_id,
                 timestamp=flushed.timestamp,
                 content=text,
+                rate=rate,
                 status="success",
             )
 
