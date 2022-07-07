@@ -1,3 +1,5 @@
+import logging.config
+
 from pydantic import BaseModel
 
 
@@ -27,5 +29,12 @@ class LogConfig(BaseModel):
         },
     }
     loggers = {
-        "voice-transcript": {"handlers": ["default"], "level": LOG_LEVEL},
+        "voice-transcript": {
+            "handlers": ["default"],
+            "level": LOG_LEVEL,
+        },
     }
+
+
+logging.config.dictConfig(LogConfig().dict())
+logger = logging.getLogger("voice-transcript")

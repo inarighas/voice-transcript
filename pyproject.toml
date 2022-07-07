@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools ~= 58.0", "wheel"]
+requires = ["setuptools", "wheel"]
 # ERROR: Project file:///home/inarighas/Projects/voice-transcript has a 'pyproject.toml' and its build backend is missing the 'build_editable' hook. 
 # Since it does not have a 'setup.py' nor a 'setup.cfg', it cannot be installed in editable mode. Consider using a build backend that supports PEP 660.
 
@@ -16,9 +16,29 @@ requires-python = ">=3.10"
 [project.optional-dependencies]
 test = [
     "flake8",
-    "black==21.9b0",
+    "black",
     "pre-commit==2.15.0",
-    "mypy==0.910",
-    "pytest==6.2.5",
-    "pytest-cov==3.0.0",
+    "mypy",
+    "pytest",
+    "pytest-cov",
 ]
+
+
+# Code style
+
+[tool.black]
+line-length = 70
+
+[tool.isort]
+profile = "black"
+
+[tool.flake8]
+ignore = "D203"
+exclude = '.git, __pycache__,docs/, old, build, dist, .venv, .vscode, models/voxpopuli_test_script.py'
+max-complexity = 10
+
+[tool.pytest.ini_options]
+# filterwarnings = ignore::DeprecationWarning
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
