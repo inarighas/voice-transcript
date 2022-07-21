@@ -1,0 +1,25 @@
+# temporary files
+.pytest_cache
+.tox
+.venv
+.vscode
+*/_pycache_
+*/*/_pycache_
+
+
+# local folders
+samples/b64
+samples/flac
+samples/videos
+
+# local scripts
+eval
+models/sentiment.py
+models/voxpopuli_model.py
+models/speechbrain_ctc_large.py
+models/voxpopuli_test_script.py
+
+# pretrained stuff
+pretrained_models/asr-wav2vec2-commonvoice-fr
+pretrained_models/wav2vec2-FR-7K-large
+model_checkpoints
