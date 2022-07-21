@@ -1,8 +1,8 @@
-torch
 uvicorn
 fastapi
 librosa
 numpy
 soundfile
-pydantic
+transformers
 speechbrain==0.5.12
+torch
