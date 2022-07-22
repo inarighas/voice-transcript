@@ -65,16 +65,18 @@ Be sure to get all the pretrained models installed in their corresponding folder
 Building the image:
 
 ```{bash}
-docker build -t voice-transcript-image
+docker build -t voice-transcript .
 ```
 
 Running the image:
 
 ```{bash}
-docker run -d -p 8000:8000  -v path/to/local/pretrained_models/folder:/path/to/container/pretrained_models/folder voice-transcript
+docker run -d -p 8001:8001  -v path/to/local/pretrained_models/folder:/path/to/container/pretrained_models/folder voice-transcript
 ```
 
-The api communicate with the following ip adress `127.0.0.1`  using port `8000`.
+> **_NOTE:_**  Currently the command is `docker run -d -p 8001:8001  -v /root/voice-transcript/pretrained_models:/code/pretrained_models voice-transcript`
+
+The api communicate with the following ip adress `127.0.0.1`  using port `8001`.
 
 ### **Communicate with the API using CURL**
 
@@ -82,22 +84,20 @@ The api communicate with the following ip adress `127.0.0.1`  using port `8000`.
 
 ```{bash}
 curl --request GET \
-  --url http://127.0.0.1:8000/ \
+  --url http://127.0.0.1:8001/ \
   --header 'Content-Type: application/json'
 ```
 
 - Transcribe `bonjour.wav` (POST request)
 
 ```{bash}
-curl --request POST \
-  --url http://127.0.0.1:8000/transcribe_file \
-  --header 'Accept-Language: en-US,en;q=0.9' \
-  --header 'Connection: keep-alive' \
-  --header 'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36' \
-  --header 'accept: application/json' \
-  --data '{
- "content_format": "wav",
- "name": "bonjour"
+curl -X 'POST' \
+  'http://127.0.0.1:8001/transcribe_file' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "content_format": "wav",
+  "name": "bonjour"
 }'
 ```
 
