@@ -68,15 +68,21 @@ Building the image:
 docker build -t voice-transcript .
 ```
 
+If no Docker network is established, create network to assign static IP address to the service:
+
+```{bash}
+docker network create --subnet=172.20.0.0/16 demo-network
+```
+
 Running the image:
 
 ```{bash}
-docker run -d -p 8001:8001  -v path/to/local/pretrained_models/folder:/path/to/container/pretrained_models/folder voice-transcript
+docker run -d --net demo-network --ip 172.20.0.10 -p 8001:8001  -v path/to/local/pretrained_models/folder:/path/to/container/pretrained_models/folder voice-transcript
 ```
 
-> **_NOTE:_**  Currently the command is `docker run -d -p 8001:8001  -v /root/voice-transcript/pretrained_models:/code/pretrained_models voice-transcript`
+> **_NOTE:_**  Currently the command is `docker run -d --net demo-network --ip 172.20.0.10 -p 8001:8001  -v /root/voice-transcript/pretrained_models:/code/pretrained_models voice-transcript`
 
-The api communicate with the following ip adress `127.0.0.1`  using port `8001`.
+In this setting, the api communicate with the following ip adress `172.20.0.10`  using port `8001`.
 
 ### **Communicate with the API using CURL**
 
@@ -84,7 +90,7 @@ The api communicate with the following ip adress `127.0.0.1`  using port `8001`.
 
 ```{bash}
 curl --request GET \
-  --url http://127.0.0.1:8001/ \
+  --url http://172.20.0.10:8001/ \
   --header 'Content-Type: application/json'
 ```
 
@@ -92,7 +98,7 @@ curl --request GET \
 
 ```{bash}
 curl -X 'POST' \
-  'http://127.0.0.1:8001/transcribe_file' \
+  'http://172.20.0.10:8001/transcribe_file' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
