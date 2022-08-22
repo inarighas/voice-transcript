@@ -109,8 +109,15 @@ curl -X 'POST' \
 
 ## Dependencies
 
+### Basic
+
 - FastAPI, numpy, pydantic, speechbrain, torch
 - see the full dependencies available in `requirements.txt`
+
+### DevDep
+
+- json, lxml, BeautifulSoup4 
+- Fastwer for model evaluation (`pip install pybind11 fastwer`)
 
 ## Credits
 
