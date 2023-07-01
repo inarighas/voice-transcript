@@ -1,5 +1,14 @@
+# cache Folders
+**/__pycache__
+**/.ipynb_checkpoints
+**/.pytest_cache
+**/.tox
+
+# Environments
+.venv
+.vscode
+
 # Byte-compiled / optimized / DLL files
-__pycache__/
 *.py[cod]
 *$py.class
 
@@ -31,9 +40,3 @@ MANIFEST
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
-
-# Environments
-.env
-.venv
-env/
-venv/

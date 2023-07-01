@@ -1,6 +1,6 @@
-# `voice-transcript` microservice
+# `voice-transcript` app & microservice
 
-Microservice performing audio/voice transcription (speech-to-text).
+Miniapp and corresponding microservice implementation performing audio/voice transcription (speech-to-text) based on on speechbrain/hugging face deep model (wav2vec2).
 
 ## Content
 
@@ -10,16 +10,26 @@ Microservice performing audio/voice transcription (speech-to-text).
 
 **Output**:
 
-- character string representing text transcription;
-- speech rate in word per minute;
-- general emotion estimation (temporarly)
+- text transcription of input audio (french);
+- Speech rate in word per minute;
+- Emotion related feature computing;
 
 ## Project structure
 
 - `app/` contains application source code.
-- `eval/` gathers some evaluation and exploratory scripts.
+- `eval/` gathers some evaluation/exploratory scripts and jupyter notebooks.
 - `tests/` is the testing files folder.
 - `samples/` contains some audio files for testing.
+- `libs/` contains mainly some audio processing (feature extractions) helpers
+- `demo/` contains a streamlit interface that runs the service internaly and shows result on a webpage.
+
+
+
+## Running the demo
+
+- Make sure all dependencies are installed (see Dependencies section),
+- Run `streamlit demo/interactive_app.py`,
+- Open in your favourite browser (tested on firefox and Chromium) the generated (localhost) link if not opened automatically.
 
 ## Runnig the service
 
@@ -109,16 +119,11 @@ curl -X 'POST' \
 
 ## Dependencies
 
-### Basic
+*to run the API and the streamlit demo*.
 
-- FastAPI, numpy, pydantic, speechbrain, torch
 - see the full dependencies available in `requirements.txt`
 
-### DevDep
-
-- json, lxml, BeautifulSoup4 
-- Fastwer for model evaluation (`pip install pybind11 fastwer`)
 
 ## Credits
 
-- Developed by Ali Saghiran for Resileyes Therapeutics.
+**Author**: Ali Saghiran

@@ -2,8 +2,9 @@ import numpy as np
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
+import librosa
 from app.config import logger
-from app.models.speechbrain_model import transcribe
+from app.models.speechbrain_model import transcribe, TARGET_SR
 from app.utils import (
     compute_word_rate,
     speech_to_array_from_buffer,
@@ -49,8 +50,18 @@ class FailedTranscription(Transcription):
 
 def process_transcription(signal: np.array, sr: int):
     response = ""
+    if sr != TARGET_SR:
+        logger.debug(f"Resampling signal: {sr} != {TARGET_SR} (target rate).")
+        resampled = librosa.resample(
+            signal, orig_sr=sr,
+            target_sr=TARGET_SR,
+            res_type="kaiser_fast"
+            )
+    else:
+        logger.debug(f"Input with expected SR. {TARGET_SR} (target rate).")
+
     try:
-        response, dur = transcribe(signal, sr)
+        response, dur = transcribe(resampled, TARGET_SR)
     except ValueError:
         logger.warning(
             "Error during transcription, see transcribe procedure."
